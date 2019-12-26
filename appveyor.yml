@@ -1,0 +1,25 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+
+init:
+  - git config --global core.autocrlf input
+
+before_build:
+- cmd: >-
+    nuget restore ./src/TestMultiFramework.sln
+
+    choco install opencover.portable
+
+    choco install codecov
+build:
+  project: /src/TestMultiFramework.sln
+  verbosity: minimal
+test_script:
+- cmd: >-
+    OpenCover.Console.exe -register:administrator -target:"nunit3-console.exe" -targetargs:".\src\TestProject\bin\Debug\net461\TestProject.dll .\src\TestProject\bin\Debug\netcoreapp1.0\TestProject.dll" -filter:"+[*]* -[*Test]*" -output:"coverage.xml"
+after_test:
+- ps: |
+    $env:PATH = 'C:\msys64\usr\bin;' + $env:PATH
+      Invoke-WebRequest -Uri 'https://codecov.io/bash' -OutFile codecov.sh
+      bash codecov.sh -f "coverage.xml"
+      
