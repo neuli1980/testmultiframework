@@ -79,6 +79,8 @@
 # CSharp language
 *.cs text diff=csharp
 
+/**/Class1.cs binary
+
 #
 # Exclude files from exporting
 #
