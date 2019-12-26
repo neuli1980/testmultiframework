@@ -22,6 +22,7 @@ namespace TestProject
         {
             string testString = @"Das ist CRLF
 Zweite Zeile";
+
             string expected = "Das ist CRLF\r\nZweite Zeile";
 
             Assert.AreEqual(expected, testString);
